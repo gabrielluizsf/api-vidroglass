@@ -2,54 +2,42 @@ package controller
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/mariarobertap/api-vidroglass/models"
-    "github.com/mariarobertap/api-vidroglass/service"
 	"strconv"
 
+	"github.com/gin-gonic/gin"
+	"github.com/mariarobertap/api-vidroglass/interfaces"
+	"github.com/mariarobertap/api-vidroglass/models"
 )
 
-
-
-type ClienteController interface {
-	FindAll(ctx *gin.Context) 
-	Save(ctx *gin.Context) 
-	UpdateClientById(ctx *gin.Context) 
-	GetClientById(ctx *gin.Context)
-	
-}
-
 type controllerCliente struct {
-	service service.ClienteService
+	service interfaces.ClienteService
 }
 
-
-func NewClienteController(service service.ClienteService) ClienteController {
-	return &controllerCliente {
+func NewClienteController(service interfaces.ClienteService) interfaces.ClienteController {
+	return &controllerCliente{
 		service: service,
 	}
 }
 
-func (c *controllerCliente) FindAll(ctx *gin.Context){
+func (c *controllerCliente) FindAll(ctx *gin.Context) {
 	clientes, err := c.service.FindAll()
-	if(err != nil){
+	if err != nil {
 		fmt.Println(err)
 		ctx.JSON(400, "error")
 	}
 
 	ctx.JSON(200, clientes)
 
-
 }
 
-func (c *controllerCliente) Save(ctx *gin.Context){
+func (c *controllerCliente) Save(ctx *gin.Context) {
 	var cliente models.Cliente
 	ctx.BindJSON(&cliente)
 	id, err := c.service.Save(cliente)
-	if(err != nil){
+	if err != nil {
 		fmt.Println(err)
 		response := models.BadResponse{"Ocorreu um erro ao criar o Objeto", "Error", err.Error()}
-		ctx.JSON(400, response) 
+		ctx.JSON(400, response)
 		return
 	}
 	cliente.Id_cliente = id
@@ -59,12 +47,11 @@ func (c *controllerCliente) Save(ctx *gin.Context){
 
 }
 
-
-func (c *controllerCliente) GetClientById(ctx *gin.Context){
-	id_cliente := ctx.Param("id_cliente") 
+func (c *controllerCliente) GetClientById(ctx *gin.Context) {
+	id_cliente := ctx.Param("id_cliente")
 	teste, err := strconv.Atoi(id_cliente)
 	customer, err := c.service.GetClientById(teste)
-	if(err != nil){
+	if err != nil {
 		fmt.Println(err)
 		response := models.BadResponse{"Cliente não encontrado", "Error", err.Error()}
 		ctx.JSON(400, response)
@@ -73,20 +60,19 @@ func (c *controllerCliente) GetClientById(ctx *gin.Context){
 
 	ctx.JSON(200, customer)
 
-
 }
 
-func (c *controllerCliente) UpdateClientById(ctx *gin.Context){
+func (c *controllerCliente) UpdateClientById(ctx *gin.Context) {
 	var cliente models.Cliente
 	ctx.BindJSON(&cliente)
 	err := c.service.UpdateClientById(cliente)
-	if(err != nil){
+	if err != nil {
 		fmt.Println(err)
 		response := models.BadResponse{"Ocorreu um erro ao atualizar o objeto", "Error", err.Error()}
-		ctx.JSON(400, response) 
+		ctx.JSON(400, response)
 		return
 	}
-	
+
 	response := models.GoodResponse{"Objeto atualizado", "Ok", cliente}
 
 	ctx.JSON(200, response)

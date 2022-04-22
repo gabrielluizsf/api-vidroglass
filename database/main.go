@@ -1,42 +1,38 @@
 package main
 
-
 import (
-    "os"
-    "database/sql"
-    "fmt"
-    _ "github.com/mattn/go-sqlite3"
+	"database/sql"
+	"fmt"
+	"os"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
-func main() {
-    
-    //os.Create("data.db")
+func init() {
 
-    db, err := sql.Open("sqlite3", "data.db")
-    if err != nil {
-        fmt.Println(err)
-        os.Exit(1)
-    }
+	//os.Create("data.db")
+
+	db, err := sql.Open("sqlite3", "data.db")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
 	/*
-    _, err = db.Exec("CREATE TABLE `customers` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `first_name` VARCHAR(255) NOT NULL, `last_name` VARCHAR(255) NOT NULL)")
-    if err != nil {
-        fmt.Println(err)
-        os.Exit(1)
-    }
+	   _, err = db.Exec("CREATE TABLE `customers` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `first_name` VARCHAR(255) NOT NULL, `last_name` VARCHAR(255) NOT NULL)")
+	   if err != nil {
+	       fmt.Println(err)
+	       os.Exit(1)
+	   }
 	*/
-
-
 
 	getAll(db)
 	db.Close()
 
 }
 
+func getAll(db *sql.DB) {
 
-func getAll(db *sql.DB){
-
-	
 	rows, err := db.Query("SELECT * FROM endereco")
 	checkErr(err)
 	var uid int
@@ -47,7 +43,7 @@ func getAll(db *sql.DB){
 	var estado string
 
 	for rows.Next() {
-		err = rows.Scan(&uid, &rua, &numero, &cep, &cidade, &estado )
+		err = rows.Scan(&uid, &rua, &numero, &cep, &cidade, &estado)
 		checkErr(err)
 		fmt.Println(uid)
 		fmt.Println(rua)
@@ -56,30 +52,29 @@ func getAll(db *sql.DB){
 		fmt.Println(cidade)
 		fmt.Println(estado)
 
-	
 	}
 
-	rows.Close() 
+	rows.Close()
 }
 
-func createCustomer(db *sql.DB){
-		// insert
+func createCustomer(db *sql.DB) {
+	// insert
 
-		stmt, err := db.Prepare("INSERT INTO customers(first_name, last_name) values(?,?)")
-		checkErr(err)
-	
-		res, err := stmt.Exec("Maria", "Roberta")
-		checkErr(err)
-	
-		id, err := res.LastInsertId()
-		checkErr(err)
-	
-		fmt.Println(id)
+	stmt, err := db.Prepare("INSERT INTO customers(first_name, last_name) values(?,?)")
+	checkErr(err)
+
+	res, err := stmt.Exec("Maria", "Roberta")
+	checkErr(err)
+
+	id, err := res.LastInsertId()
+	checkErr(err)
+
+	fmt.Println(id)
 }
 
-func checkErr(err error){
+func checkErr(err error) {
 	if err != nil {
-        fmt.Println(err)
-        os.Exit(1)
-    }
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
