@@ -14,6 +14,7 @@ type ClienteService interface {
 	GetClientById(id_cliente int) (models.Cliente, error)
 	FindAll() ([]models.Cliente, error)
 	Save(models.Cliente) (int, error)
+	UpdateClientById(models.Cliente) (error)
 
 
 }
@@ -110,3 +111,23 @@ func (c *clienteService) GetClientById( id_cliente int) (models.Cliente, error){
 
 
 
+func (c *clienteService) UpdateClientById(cliente models.Cliente) (error){
+	db, err := sql.Open("sqlite3", "./database/data.db")
+	stmt, err := db.Prepare("UPDATE cliente SET id_endereco = ?, nome = ?, cpf = ?, telefone = ? WHERE id_cliente = ?")
+
+	if(err != nil){
+		return err
+	}
+
+	res, err := stmt.Exec(cliente.Id_endereco, cliente.Nome, cliente.Cpf, cliente.Telefone, cliente.Id_cliente)
+	
+	fmt.Println(res)
+	if(err != nil){
+		return err
+	}
+
+
+	db.Close()
+
+	return nil
+}

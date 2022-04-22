@@ -14,6 +14,7 @@ import (
 type ClienteController interface {
 	FindAll(ctx *gin.Context) 
 	Save(ctx *gin.Context) 
+	UpdateClientById(ctx *gin.Context) 
 	GetClientById(ctx *gin.Context)
 	
 }
@@ -72,5 +73,22 @@ func (c *controllerCliente) GetClientById(ctx *gin.Context){
 
 	ctx.JSON(200, customer)
 
+
+}
+
+func (c *controllerCliente) UpdateClientById(ctx *gin.Context){
+	var cliente models.Cliente
+	ctx.BindJSON(&cliente)
+	err := c.service.UpdateClientById(cliente)
+	if(err != nil){
+		fmt.Println(err)
+		response := models.BadResponse{"Ocorreu um erro ao atualizar o objeto", "Error", err.Error()}
+		ctx.JSON(400, response) 
+		return
+	}
+	
+	response := models.GoodResponse{"Objeto atualizado", "Ok", cliente}
+
+	ctx.JSON(200, response)
 
 }

@@ -69,6 +69,7 @@ func main(){
 	server.GET("/cliente", clienteController.FindAll)
 	server.POST("/cliente", clienteController.Save)
 	server.GET("/cliente/:id_cliente", clienteController.GetClientById)
+	server.PUT("/cliente", clienteController.UpdateClientById)
 
 
 
