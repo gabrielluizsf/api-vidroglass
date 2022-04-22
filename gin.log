@@ -1,17 +1,21 @@
+[GIN-debug] [WARNING] Now Gin requires Go 1.13+.
+
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
 [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
  - using env:	export GIN_MODE=release
  - using code:	gin.SetMode(gin.ReleaseMode)
 
-[GIN-debug] GET    /health-check             --> main.main.func1 (4 handlers)
-[GIN-debug] GET    /videos                   --> main.main.func2 (4 handlers)
-[GIN-debug] POST   /videos                   --> main.main.func3 (4 handlers)
-[GIN-debug] POST   /customer                 --> main.main.func4 (4 handlers)
-[GIN-debug] GET    /customer                 --> github.com/mariarobertap/api-vidroglass/controller.CustomerController.FindAll-fm (4 handlers)
-[GIN-debug] GET    /cliente                  --> github.com/mariarobertap/api-vidroglass/controller.ClienteController.FindAll-fm (4 handlers)
-[GIN-debug] POST   /cliente                  --> github.com/mariarobertap/api-vidroglass/controller.ClienteController.Save-fm (4 handlers)
-[GIN-debug] GET    /user/:userid             --> main.main.func5 (4 handlers)
-[GIN-debug] GET    /                         --> github.com/gin-gonic/gin.BasicAuthForRealm.func1 (3 handlers)
+[GIN-debug] GET    /health-check             --> main.main.func1 (3 handlers)
+[GIN-debug] GET    /videos                   --> main.main.func2 (3 handlers)
+[GIN-debug] POST   /videos                   --> main.main.func3 (3 handlers)
+[GIN-debug] POST   /customer                 --> main.main.func4 (3 handlers)
+[GIN-debug] GET    /customer                 --> github.com/mariarobertap/api-vidroglass/controller.CustomerController.FindAll-fm (3 handlers)
+[GIN-debug] GET    /cliente                  --> github.com/mariarobertap/api-vidroglass/controller.ClienteController.FindAll-fm (3 handlers)
+[GIN-debug] POST   /cliente                  --> github.com/mariarobertap/api-vidroglass/controller.ClienteController.Save-fm (3 handlers)
+[GIN-debug] GET    /user/:userid             --> main.main.func5 (3 handlers)
+[GIN-debug] GET    /                         --> github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1 (2 handlers)
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8080
-::1 - [17 Apr 22 18:53 -03] GET /cliente 200 781.7µs 
+[GIN] 2022/04/21 - 20:49:44 | 200 |       727.4µs |             ::1 | GET      "/cliente"

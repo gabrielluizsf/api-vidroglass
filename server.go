@@ -5,9 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mariarobertap/api-vidroglass/controller"
     "github.com/mariarobertap/api-vidroglass/service"
-	"github.com/mariarobertap/api-vidroglass/middleware"
-	"io"
-	"os"
+	//"github.com/mariarobertap/api-vidroglass/middleware"
+	//"io"
+	//"os"
 	"net/http"
 
 )
@@ -24,7 +24,7 @@ var (
 )
 
 
-
+/*
 func setupLogOutput(){
 	f, err := os.Create("gin.log")
 
@@ -35,12 +35,13 @@ func setupLogOutput(){
 
 	gin.DefaultWriter =  io.MultiWriter(f, os.Stdout)
 }
+*/
 
 func main(){
-	setupLogOutput()
-	server := gin.New()
+	//setupLogOutput()
+	server := gin.Default()
 
-	server.Use(gin.Recovery(), middleware.Logger(), middleware.Auth())
+	//server.Use(gin.Recovery(), middleware.Logger(), middleware.Auth())
 
 	server.GET("/health-check", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{
@@ -67,6 +68,9 @@ func main(){
 	
 	server.GET("/cliente", clienteController.FindAll)
 	server.POST("/cliente", clienteController.Save)
+	server.GET("/cliente/:id_cliente", clienteController.GetClientById)
+
+
 
 	server.GET("/user/:userid", func(c *gin.Context) {
         userid := c.Param("userid") 
@@ -95,7 +99,7 @@ func main(){
 
 	 [GET] /empresa/id Retornará empresa
 	*/
-    server.GET("")
+   
 
 	server.Run(":8080")
 

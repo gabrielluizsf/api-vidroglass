@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mariarobertap/api-vidroglass/models"
     "github.com/mariarobertap/api-vidroglass/service"
+	"strconv"
 
 )
 
@@ -13,6 +14,8 @@ import (
 type ClienteController interface {
 	FindAll(ctx *gin.Context) 
 	Save(ctx *gin.Context) 
+	GetClientById(ctx *gin.Context)
+	
 }
 
 type controllerCliente struct {
@@ -52,5 +55,22 @@ func (c *controllerCliente) Save(ctx *gin.Context){
 	response := models.GoodResponse{"Objeto criado", "Ok", cliente}
 
 	ctx.JSON(200, response)
+
+}
+
+
+func (c *controllerCliente) GetClientById(ctx *gin.Context){
+	id_cliente := ctx.Param("id_cliente") 
+	teste, err := strconv.Atoi(id_cliente)
+	customer, err := c.service.GetClientById(teste)
+	if(err != nil){
+		fmt.Println(err)
+		response := models.BadResponse{"Cliente não encontrado", "Error", err.Error()}
+		ctx.JSON(400, response)
+		return
+	}
+
+	ctx.JSON(200, customer)
+
 
 }

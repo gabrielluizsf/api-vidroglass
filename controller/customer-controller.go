@@ -39,6 +39,9 @@ func (c *controller) FindAll(ctx *gin.Context){
 }
 
 
+
+
+
 func (c *controller) Save(ctx *gin.Context) models.Customer{
 	var customer models.Customer
 	ctx.BindJSON(&customer)

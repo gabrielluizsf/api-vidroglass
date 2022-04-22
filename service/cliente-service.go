@@ -11,6 +11,7 @@ import (
 type ClienteService interface {
 
 
+	GetClientById(id_cliente int) (models.Cliente, error)
 	FindAll() ([]models.Cliente, error)
 	Save(models.Cliente) (int, error)
 
@@ -84,5 +85,28 @@ func (c *clienteService) FindAll() ([]models.Cliente, error){
 	db.Close()
 	return c.Cliente, nil
 }
+
+func (c *clienteService) GetClientById( id_cliente int) (models.Cliente, error){
+	db, err := sql.Open("sqlite3", "./database/data.db")
+	row := db.QueryRow("SELECT * FROM cliente WHERE id_cliente = ?", id_cliente)
+
+	
+	var cliente models.Cliente
+	var id_endereco int
+	var nome string
+	var cpf string
+	var telefone string
+
+	err = row.Scan(&id_cliente, &id_endereco, &nome, &cpf, &telefone)
+	if err != nil {
+		fmt.Println(err)
+		return cliente, err
+	}
+
+	cliente = models.Cliente{id_cliente, id_endereco, nome, cpf, telefone}
+	
+	return cliente, nil
+}
+
 
 
