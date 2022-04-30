@@ -19,6 +19,12 @@ import (
 var (
 	clienteService    interfaces.ClienteService    = service.NewClienteService()
 	clienteController interfaces.ClienteController = controller.NewClienteController(clienteService)
+
+	PaymentFornService interfaces.PaymentFormService    = service.NewPaymentFormService()
+	PaymentController  interfaces.PaymentFormController = controller.NewPaymentFormController(PaymentFornService)
+
+	AddressService    interfaces.AddressService    = service.NewAddressService()
+	AddressController interfaces.AddressController = controller.NewAddressController(AddressService)
 )
 
 /*
@@ -56,6 +62,16 @@ func main() {
 	server.POST("/cliente", clienteController.Save)
 	server.GET("/cliente/:id_cliente", clienteController.GetClientById)
 	server.PUT("/cliente", clienteController.UpdateClientById)
+
+	server.GET("/paymentform", PaymentController.GetPaymentForm)
+	server.POST("/paymentform", PaymentController.CreatePaymentForm)
+	server.GET("/paymentform/:id_payment", PaymentController.GetPaymentFormByID)
+	server.PUT("/paymentform", PaymentController.UpdatePaymentForm)
+
+	server.GET("/address", AddressController.GetAddress)
+	server.POST("/address", AddressController.CreateAddress)
+	server.GET("/address/:id_address", AddressController.GetAddressByID)
+	server.PUT("/address", AddressController.UpdateAddress)
 
 	server.GET("/user/:userid", func(c *gin.Context) {
 		userid := c.Param("userid")
