@@ -48,16 +48,12 @@ func (c *clienteService) Save(cliente models.Cliente) (int, error) {
 func (c *clienteService) FindAll() ([]models.Cliente, error) {
 
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
-	fmt.Println(err)
 	rows, err := db.Query("SELECT * FROM cliente")
-	fmt.Println(err)
 
-	fmt.Println("Estou prestes a dar erro")
 	if err != nil {
 		fmt.Println(err)
 		return c.Cliente, err
 	}
-	fmt.Println("Estou prestes a dar erro")
 
 	c.Cliente = nil
 	var id_cliente int

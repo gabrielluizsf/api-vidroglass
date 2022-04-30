@@ -2,10 +2,10 @@ package models
 
 type Cliente struct {
 	Id_cliente  int    `json:"idcliente"`
-	Id_endereco int    `json:"idendereco"`
-	Nome        string `json:"nome"`
-	Cpf         string `json:"cpf"`
-	Telefone    string `json:"telefone"`
+	Id_endereco int    `json:"idendereco,omitempty" binding:"required"`
+	Nome        string `json:"nome,omitempty" binding:"required"`
+	Cpf         string `json:"cpf,omitempty" binding:"required"`
+	Telefone    string `json:"telefone,omitempty" binding:"required"`
 }
 
 type GoodResponse struct {

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -32,8 +33,13 @@ func (c *controllerCliente) FindAll(ctx *gin.Context) {
 
 func (c *controllerCliente) Save(ctx *gin.Context) {
 	var cliente models.Cliente
-	ctx.BindJSON(&cliente)
+
+	if err := ctx.BindJSON(&cliente); err != nil {
+		ctx.JSON(http.StatusBadRequest, models.BadResponse{"Ocorreu um erro ao criar o Objeto", "Error", err.Error()})
+		return
+	}
 	id, err := c.service.Save(cliente)
+
 	if err != nil {
 		fmt.Println(err)
 		response := models.BadResponse{"Ocorreu um erro ao criar o Objeto", "Error", err.Error()}
@@ -64,7 +70,12 @@ func (c *controllerCliente) GetClientById(ctx *gin.Context) {
 
 func (c *controllerCliente) UpdateClientById(ctx *gin.Context) {
 	var cliente models.Cliente
-	ctx.BindJSON(&cliente)
+
+	if err := ctx.BindJSON(&cliente); err != nil {
+		ctx.JSON(http.StatusBadRequest, models.BadResponse{"Ocorreu um erro ao criar o Objeto", "Error", err.Error()})
+		return
+	}
+
 	err := c.service.UpdateClientById(cliente)
 	if err != nil {
 		fmt.Println(err)
