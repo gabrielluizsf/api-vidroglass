@@ -45,3 +45,17 @@ type AddressService interface {
 	CreateAddress(models.Address) (int, error)
 	UpdateAddress(models.Address) error
 }
+
+type ProductTypeController interface {
+	GetProductTypeByID(ctx *gin.Context)
+	GetProductType(ctx *gin.Context)
+	CreateProductType(ctx *gin.Context)
+	UpdateProductType(ctx *gin.Context)
+}
+
+type ProductTypeService interface {
+	GetProductTypeByID(id_product_type int) (models.ProductType, error)
+	GetProductType() ([]models.ProductType, error)
+	CreateProductType(models.ProductType) (int, error)
+	UpdateProductType(models.ProductType) error
+}

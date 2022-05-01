@@ -27,7 +27,7 @@ func (c *addressService) CreateAddress(address models.Address) (int, error) {
 		return 0, err
 	}
 
-	res, err := stmt.Exec(address.Street, address.Number, address.Cep, address.State)
+	res, err := stmt.Exec(address.Street, address.Number, address.Cep, address.City, address.State)
 
 	if err != nil {
 		return 0, err

@@ -25,6 +25,9 @@ var (
 
 	AddressService    interfaces.AddressService    = service.NewAddressService()
 	AddressController interfaces.AddressController = controller.NewAddressController(AddressService)
+
+	ProductTypeService    interfaces.ProductTypeService    = service.NewProductTypeService()
+	ProductTypeController interfaces.ProductTypeController = controller.NewProductTypeController(ProductTypeService)
 )
 
 /*
@@ -72,6 +75,11 @@ func main() {
 	server.POST("/address", AddressController.CreateAddress)
 	server.GET("/address/:id_address", AddressController.GetAddressByID)
 	server.PUT("/address", AddressController.UpdateAddress)
+
+	server.GET("/product/type", ProductTypeController.GetProductType)
+	server.POST("/product/type", ProductTypeController.CreateProductType)
+	server.GET("/product/type/:id_tipo", ProductTypeController.GetProductTypeByID)
+	server.PUT("/product/type", ProductTypeController.UpdateProductType)
 
 	server.GET("/user/:userid", func(c *gin.Context) {
 		userid := c.Param("userid")
