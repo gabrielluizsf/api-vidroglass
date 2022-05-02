@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -9,11 +8,9 @@ import (
 	"github.com/mariarobertap/api-vidroglass/controller"
 	"github.com/mariarobertap/api-vidroglass/interfaces"
 	"github.com/mariarobertap/api-vidroglass/service"
-
 	//"github.com/mariarobertap/api-vidroglass/middleware"
 	//"io"
 	//"os"
-	"net/http"
 )
 
 var (
@@ -28,6 +25,9 @@ var (
 
 	ProductTypeService    interfaces.ProductTypeService    = service.NewProductTypeService()
 	ProductTypeController interfaces.ProductTypeController = controller.NewProductTypeController(ProductTypeService)
+
+	ProductService    interfaces.ProductService    = service.NewProductService()
+	ProductController interfaces.ProductController = controller.NewProductController(ProductService)
 )
 
 /*
@@ -81,31 +81,10 @@ func main() {
 	server.GET("/product/type/:id_tipo", ProductTypeController.GetProductTypeByID)
 	server.PUT("/product/type", ProductTypeController.UpdateProductType)
 
-	server.GET("/user/:userid", func(c *gin.Context) {
-		userid := c.Param("userid")
-		message := "userid is " + userid
-		c.String(http.StatusOK, message)
-		fmt.Println(message)
-	})
-
-	/*
-	 [GET] /cliente Retornará clientes
-	 [GET] /cliente/id Retornará cliente
-	 [POST] /cliente Cadastrar cliente e endereco
-	 [GET] /endereco/id Retornará endereco
-
-	 [POST] /tipo_produto Cadastrar tipo_produto
-	 [POST] /produto Cadastrar produto
-	 [GET] /produto/id Retornará produto
-
-	 [POST] /item Cadastrar item
-	 [GET] /item/id Retornará item
-
-	 [POST] /nota Cadastrar nota
-	 [GET] /nota/id Retornará nota
-
-	 [GET] /empresa/id Retornará empresa
-	*/
+	server.GET("/product", ProductController.GetProduct)
+	server.POST("/product", ProductController.CreateProduct)
+	server.GET("/product/:id_tipo", ProductController.GetProductByID)
+	server.PUT("/product", ProductController.UpdateProduct)
 
 	server.Run(":8080")
 

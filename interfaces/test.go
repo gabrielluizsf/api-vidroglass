@@ -59,3 +59,17 @@ type ProductTypeService interface {
 	CreateProductType(models.ProductType) (int, error)
 	UpdateProductType(models.ProductType) error
 }
+
+type ProductController interface {
+	GetProductByID(ctx *gin.Context)
+	GetProduct(ctx *gin.Context)
+	CreateProduct(ctx *gin.Context)
+	UpdateProduct(ctx *gin.Context)
+}
+
+type ProductService interface {
+	GetProductByID(id_product int) (models.Product, error)
+	GetProduct() ([]models.Product, error)
+	CreateProduct(models.Product) (int, error)
+	UpdateProduct(models.Product) error
+}
