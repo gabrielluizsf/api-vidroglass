@@ -28,6 +28,9 @@ var (
 
 	ProductService    interfaces.ProductService    = service.NewProductService()
 	ProductController interfaces.ProductController = controller.NewProductController(ProductService)
+
+	ItemService    interfaces.ItemService    = service.NewItemService()
+	ItemController interfaces.ItemController = controller.NewItemController(ItemService)
 )
 
 /*
@@ -85,6 +88,11 @@ func main() {
 	server.POST("/product", ProductController.CreateProduct)
 	server.GET("/product/:id_tipo", ProductController.GetProductByID)
 	server.PUT("/product", ProductController.UpdateProduct)
+
+	server.GET("/item", ItemController.FindAll)
+	server.POST("/item", ItemController.Save)
+	server.GET("/item/:id_item", ItemController.GetItemById)
+	server.PUT("/item", ItemController.UpdateItemById)
 
 	server.Run(":8080")
 
