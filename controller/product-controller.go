@@ -54,7 +54,7 @@ func (c *controllerProduct) CreateProduct(ctx *gin.Context) {
 }
 
 func (c *controllerProduct) GetProductByID(ctx *gin.Context) {
-	id_produto := ctx.Param("id_produto")
+	id_produto := ctx.Param("id_tipo")
 	id_produtostr, err := strconv.Atoi(id_produto)
 	produto, err := c.service.GetProductByID(id_produtostr)
 	if err != nil {

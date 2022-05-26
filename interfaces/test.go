@@ -73,3 +73,17 @@ type ProductService interface {
 	CreateProduct(models.Product) (int, error)
 	UpdateProduct(models.Product) error
 }
+
+type ItemController interface {
+	FindAll(ctx *gin.Context)
+	Save(ctx *gin.Context)
+	UpdateItemById(ctx *gin.Context)
+	GetItemById(ctx *gin.Context)
+}
+
+type ItemService interface {
+	GetItemById(id_cliente int) (models.Item, error)
+	FindAll() ([]models.Item, error)
+	Save(models.Item) (int, error)
+	UpdateItemById(models.Item) error
+}
