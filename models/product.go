@@ -4,7 +4,7 @@ type Product struct {
 	Id_produto     int     `json:"id_produto"`
 	Id_tipo        int     `json:"id_tipo"`
 	Valor_metragem float32 `json:"valor_metragem,omitempty" binding:"required"`
-	Espessura      float32 `json:"espessura" binding:"required"`
+	Espessura      float32 `json:"espessura" `
 	Cor            string  `json:"cor" binding:"required"`
 }
 

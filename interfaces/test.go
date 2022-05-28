@@ -87,3 +87,17 @@ type ItemService interface {
 	Save(models.Item) (int, error)
 	UpdateItemById(models.Item) error
 }
+
+type NotaController interface {
+	GetNotaByID(ctx *gin.Context)
+	GetNota(ctx *gin.Context)
+	CreateNota(ctx *gin.Context)
+	UpdateNota(ctx *gin.Context)
+}
+
+type NotaService interface {
+	GetNotaByID(id_nota int) (models.Nota, error)
+	GetNota() ([]models.Nota, error)
+	CreateNota() (int, error)
+	UpdateNota(models.Nota) (models.Nota, error)
+}
