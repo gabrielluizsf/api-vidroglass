@@ -31,6 +31,9 @@ var (
 
 	ItemService    interfaces.ItemService    = service.NewItemService()
 	ItemController interfaces.ItemController = controller.NewItemController(ItemService)
+
+	NotaService    interfaces.NotaService    = service.NewNotaService()
+	NotaController interfaces.NotaController = controller.NewNotaController(NotaService)
 )
 
 /*
@@ -93,6 +96,11 @@ func main() {
 	server.POST("/item", ItemController.Save)
 	server.GET("/item/:id_item", ItemController.GetItemById)
 	server.PUT("/item", ItemController.UpdateItemById)
+
+	server.GET("/nota", NotaController.GetNota)
+	server.POST("/nota", NotaController.CreateNota)
+	server.GET("/nota/:id_nota", NotaController.GetNotaByID)
+	server.PUT("/nota", NotaController.UpdateNota)
 
 	server.Run(":8080")
 
