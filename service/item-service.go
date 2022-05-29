@@ -150,3 +150,38 @@ func (c *itemService) getProductValue(id_produto int) (float64, error) {
 	return totalValue, nil
 
 }
+func (c *itemService) GetInvoiceItens(id_nota int) ([]models.ItemPayload, error) {
+
+	var itemPayload models.ItemPayload
+	var itemPayloads []models.ItemPayload
+
+	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
+	rows, err := db.Query("SELECT "+
+		"i.quantidade, i.valor, i.desconto,"+
+		"i.metragem_produto, p.espessura, p.cor, tp.nome "+
+		"FROM item as i "+
+		"join produto as p on p.id_produto = i.id_produto "+
+		"join tipo_produto as tp on tp.id_tipo_produto = p.id_tipo "+
+		"where i.id_nota = ?", id_nota)
+
+	if err != nil {
+		fmt.Println(err)
+		return itemPayloads, err
+	}
+
+	for rows.Next() {
+		err = rows.Scan(&itemPayload.Quantidade, &itemPayload.Valor,
+			&itemPayload.Desconto, &itemPayload.Metragem,
+			&itemPayload.Espessura, &itemPayload.Cor, &itemPayload.Nome)
+		if err != nil {
+			fmt.Println(err)
+			return itemPayloads, err
+		}
+		itemPayloads = append(itemPayloads, models.ItemPayload{itemPayload.Nome, itemPayload.Cor,
+			itemPayload.Quantidade, itemPayload.Valor, itemPayload.Desconto, itemPayload.Metragem, itemPayload.Espessura})
+	}
+
+	rows.Close()
+	db.Close()
+	return itemPayloads, nil
+}

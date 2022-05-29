@@ -86,6 +86,7 @@ type ItemService interface {
 	FindAll() ([]models.Item, error)
 	Save(models.Item) (int, error)
 	UpdateItemById(models.Item) error
+	GetInvoiceItens(id_nota int) ([]models.ItemPayload, error)
 }
 
 type NotaController interface {
@@ -96,7 +97,7 @@ type NotaController interface {
 }
 
 type NotaService interface {
-	GetNotaByID(id_nota int) (models.Nota, error)
+	GetNotaByID(id_nota int) (models.NotaPayload, error)
 	GetNota() ([]models.Nota, error)
 	CreateNota() (int, error)
 	UpdateNota(models.Nota) (models.Nota, error)
