@@ -41,7 +41,6 @@ func (c *productService) CreateProduct(product models.Product) (int, error) {
 	fmt.Println(id)
 
 	return int(id), nil
-
 }
 
 func (c *productService) GetProduct() ([]models.Product, error) {
