@@ -11,7 +11,8 @@ import (
 )
 
 type itemService struct {
-	Item []models.Item
+	Item     models.Item
+	ItemList []models.Item
 }
 
 func NewItemService() interfaces.ItemService {
@@ -58,55 +59,52 @@ func (c *itemService) FindAll() ([]models.Item, error) {
 
 	if err != nil {
 		fmt.Println(err)
-		return c.Item, err
+		return c.ItemList, err
 	}
 
-	c.Item = nil
-	var Id_item int
-	var Id_produto int
-	var Id_nota int
-	var Valor float64
-	var Quantidade int
-	var Desconto int
-	var Metragem float64
+	c.ItemList = nil
 
 	for rows.Next() {
-		err = rows.Scan(&Id_item, &Id_produto, &Id_nota, &Quantidade, &Valor, &Desconto, &Metragem)
+		err = rows.Scan(
+			&c.Item.Id_item,
+			&c.Item.Id_produto,
+			&c.Item.Id_nota,
+			&c.Item.Quantidade,
+			&c.Item.Valor,
+			&c.Item.Desconto,
+			&c.Item.Metragem)
+
 		if err != nil {
 			fmt.Println(err)
-			return c.Item, err
+			return c.ItemList, err
 		}
-		c.Item = append(c.Item, models.Item{Id_item, Id_produto, Id_nota, Valor, Quantidade, Desconto, Metragem})
+		c.ItemList = append(c.ItemList, c.Item)
 	}
 
 	rows.Close()
 	db.Close()
-	return c.Item, nil
+	return c.ItemList, nil
 }
 
 func (c *itemService) GetItemById(id_item int) (models.Item, error) {
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	row := db.QueryRow("SELECT * FROM item WHERE id_item = ?", id_item)
 
-	var item models.Item
-	var Id_item int
-	var Id_produto int
-	var Id_nota int
-	var Valor float64
-	var Quantidade int
-	var Desconto int
-	var Metragem float64
+	err = row.Scan(
+		&c.Item.Id_item,
+		&c.Item.Id_produto,
+		&c.Item.Id_nota,
+		&c.Item.Quantidade,
+		&c.Item.Valor,
+		&c.Item.Desconto,
+		&c.Item.Metragem)
 
-	err = row.Scan(&Id_item, &Id_produto, &Id_nota, &Quantidade, &Valor, &Desconto, &Metragem)
 	if err != nil {
 		fmt.Println(err)
-		return item, err
+		return c.Item, err
 	}
 
-	fmt.Println(Quantidade)
-	item = models.Item{Id_item, Id_produto, Id_nota, Valor, Quantidade, Desconto, Metragem}
-
-	return item, nil
+	return c.Item, nil
 }
 
 func (c *itemService) UpdateItemById(item models.Item) error {
@@ -177,8 +175,7 @@ func (c *itemService) GetInvoiceItens(id_nota int) ([]models.ItemPayload, error)
 			fmt.Println(err)
 			return itemPayloads, err
 		}
-		itemPayloads = append(itemPayloads, models.ItemPayload{itemPayload.Nome, itemPayload.Cor,
-			itemPayload.Quantidade, itemPayload.Valor, itemPayload.Desconto, itemPayload.Metragem, itemPayload.Espessura})
+		itemPayloads = append(itemPayloads, itemPayload)
 	}
 
 	rows.Close()

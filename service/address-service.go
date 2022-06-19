@@ -11,7 +11,8 @@ import (
 )
 
 type addressService struct {
-	Address []models.Address
+	Address     models.Address
+	AddressList []models.Address
 }
 
 func NewAddressService() interfaces.AddressService {
@@ -20,14 +21,14 @@ func NewAddressService() interfaces.AddressService {
 
 func (c *addressService) CreateAddress(address models.Address) (int, error) {
 
-	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
+	db, err := sql.Open("sqlite3", "database.db")
 	defer db.Close()
-	stmt, err := db.Prepare("insert into endereco (rua, numero, cep, cidade, estado) values (?,?,?,?,?)")
+	stmt, err := db.Prepare("insert into address (state, city, street, number, zip_number) values (?,?,?,?,?)")
 	if err != nil {
 		return 0, err
 	}
 
-	res, err := stmt.Exec(address.Street, address.Number, address.Cep, address.City, address.State)
+	res, err := stmt.Exec(address.State, address.City, address.Street, address.Number, address.Cep)
 
 	if err != nil {
 		return 0, err
@@ -46,69 +47,64 @@ func (c *addressService) CreateAddress(address models.Address) (int, error) {
 
 func (c *addressService) GetAddress() ([]models.Address, error) {
 
+	c.AddressList = nil
+
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	defer db.Close()
-	rows, err := db.Query("SELECT * FROM endereco")
+
+	rows, err := db.Query("SELECT * FROM address")
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	for rows.Next() {
+		err = rows.Scan(&c.Address.Id_address,
+			&c.Address.State,
+			&c.Address.City,
+			&c.Address.Street,
+			&c.Address.Number,
+			&c.Address.Cep)
+
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+		c.AddressList = append(c.AddressList, c.Address)
+	}
+
+	rows.Close()
+	return c.AddressList, nil
+}
+
+func (c *addressService) GetAddressByID(id_address int) (models.Address, error) {
+	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
+	row := db.QueryRow("SELECT * FROM address WHERE id_address = ?", id_address)
+
+	err = row.Scan(&c.Address.Id_address,
+		&c.Address.State,
+		&c.Address.City,
+		&c.Address.Street,
+		&c.Address.Number,
+		&c.Address.Cep)
 
 	if err != nil {
 		fmt.Println(err)
 		return c.Address, err
 	}
-
-	c.Address = nil
-
-	var id_endereco int
-	var rua string
-	var numero int
-	var cep string
-	var cidade string
-	var estado string
-
-	for rows.Next() {
-		err = rows.Scan(&id_endereco, &rua, &numero, &cep, &cidade, &estado)
-		if err != nil {
-			fmt.Println(err)
-			return c.Address, err
-		}
-		c.Address = append(c.Address, models.Address{id_endereco, rua, numero, cep, cidade, estado})
-	}
-
-	rows.Close()
 	return c.Address, nil
-}
-
-func (c *addressService) GetAddressByID(id_cliente int) (models.Address, error) {
-	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
-	row := db.QueryRow("SELECT * FROM endereco WHERE id_endereco = ?", id_cliente)
-
-	var address models.Address
-	var id_endereco int
-	var rua string
-	var numero int
-	var cep string
-	var cidade string
-	var estado string
-
-	err = row.Scan(&id_endereco, &rua, &numero, &cep, &cidade, &estado)
-	if err != nil {
-		fmt.Println(err)
-		return address, err
-	}
-
-	address = models.Address{id_endereco, rua, numero, cep, cidade, estado}
-
-	return address, nil
 }
 
 func (c *addressService) UpdateAddress(address models.Address) error {
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
-	stmt, err := db.Prepare("UPDATE endereco SET rua = ?, numero = ?, cep = ?, cidade = ?, estado = ? WHERE id_endereco = ?")
+	stmt, err := db.Prepare("UPDATE address SET state = ?, city = ?, street = ?, number = ?, cep = ? WHERE id_address = ?")
 
 	if err != nil {
 		return err
 	}
 
-	res, err := stmt.Exec(address.Street, address.Number, address.Cep, address.City, address.State, address.Id_address)
+	res, err := stmt.Exec(address.State, address.City, address.Street, address.Number, address.Cep, address.Id_address)
 
 	fmt.Println(res)
 	if err != nil {

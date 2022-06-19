@@ -11,7 +11,8 @@ import (
 )
 
 type paymentFormService struct {
-	PaymentForm []models.PaymentForm
+	PaymentForm     models.PaymentForm
+	PaymentFormList []models.PaymentForm
 }
 
 func NewPaymentFormService() interfaces.PaymentFormService {
@@ -47,31 +48,31 @@ func (c *paymentFormService) CreatePaymentForm(payment models.PaymentForm) (int,
 
 func (c *paymentFormService) GetPaymentForm() ([]models.PaymentForm, error) {
 
+	c.PaymentFormList = nil
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	defer db.Close()
 	rows, err := db.Query("SELECT * FROM pagamento")
 
 	if err != nil {
 		fmt.Println(err)
-		return c.PaymentForm, err
+		return c.PaymentFormList, err
 	}
 
-	c.PaymentForm = nil
-	var id_pagamento int
-	var forma_pagamento string
-
 	for rows.Next() {
-		err = rows.Scan(&id_pagamento, &forma_pagamento)
+		err = rows.Scan(
+			&c.PaymentForm.Id_payment,
+			&c.PaymentForm.Paymentform)
+
 		if err != nil {
 			fmt.Println(err)
-			return c.PaymentForm, err
+			return c.PaymentFormList, err
 		}
-		c.PaymentForm = append(c.PaymentForm, models.PaymentForm{id_pagamento, forma_pagamento})
+		c.PaymentFormList = append(c.PaymentFormList, c.PaymentForm)
 	}
 
 	rows.Close()
 
-	return c.PaymentForm, nil
+	return c.PaymentFormList, nil
 
 }
 
@@ -80,18 +81,14 @@ func (c *paymentFormService) GetPaymentFormByID(id_payment int) (models.PaymentF
 	defer db.Close()
 	row := db.QueryRow("SELECT * FROM pagamento WHERE id_pagamento = ?", id_payment)
 
-	var payment models.PaymentForm
-	var id_pagamento int
-	var forma_pagamento string
-	err = row.Scan(&id_pagamento, &forma_pagamento)
+	err = row.Scan(
+		&c.PaymentForm.Id_payment,
+		&c.PaymentForm.Paymentform)
 	if err != nil {
 		fmt.Println(err)
-		return payment, err
+		return c.PaymentForm, err
 	}
-
-	payment = models.PaymentForm{id_pagamento, forma_pagamento}
-
-	return payment, nil
+	return c.PaymentForm, nil
 }
 
 func (c *paymentFormService) UpdatePaymentForm(payment models.PaymentForm) error {

@@ -11,7 +11,8 @@ import (
 )
 
 type clienteService struct {
-	Cliente []models.Cliente
+	Client     models.Cliente
+	ClientList []models.Cliente
 }
 
 func NewClienteService() interfaces.ClienteService {
@@ -52,49 +53,45 @@ func (c *clienteService) FindAll() ([]models.Cliente, error) {
 
 	if err != nil {
 		fmt.Println(err)
-		return c.Cliente, err
+		return c.ClientList, err
 	}
 
-	c.Cliente = nil
-	var id_cliente int
-	var id_endereco int
-	var nome string
-	var cpf string
-	var telefone string
+	c.ClientList = nil
 
 	for rows.Next() {
-		err = rows.Scan(&id_cliente, &id_endereco, &nome, &cpf, &telefone)
+		err = rows.Scan(&c.Client.Id_cliente,
+			&c.Client.Id_endereco,
+			&c.Client.Nome,
+			&c.Client.Cpf,
+			&c.Client.Telefone)
 		if err != nil {
 			fmt.Println(err)
-			return c.Cliente, err
+			return c.ClientList, err
 		}
-		c.Cliente = append(c.Cliente, models.Cliente{id_cliente, id_endereco, nome, cpf, telefone})
+		c.ClientList = append(c.ClientList, c.Client)
 	}
 
 	rows.Close()
 	db.Close()
-	return c.Cliente, nil
+	return c.ClientList, nil
 }
 
 func (c *clienteService) GetClientById(id_cliente int) (models.Cliente, error) {
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	row := db.QueryRow("SELECT * FROM cliente WHERE id_cliente = ?", id_cliente)
 
-	var cliente models.Cliente
-	var id_endereco int
-	var nome string
-	var cpf string
-	var telefone string
+	err = row.Scan(&c.Client.Id_cliente,
+		&c.Client.Id_endereco,
+		&c.Client.Nome,
+		&c.Client.Cpf,
+		&c.Client.Telefone)
 
-	err = row.Scan(&id_cliente, &id_endereco, &nome, &cpf, &telefone)
 	if err != nil {
 		fmt.Println(err)
-		return cliente, err
+		return c.Client, err
 	}
 
-	cliente = models.Cliente{id_cliente, id_endereco, nome, cpf, telefone}
-
-	return cliente, nil
+	return c.Client, nil
 }
 
 func (c *clienteService) UpdateClientById(cliente models.Cliente) error {

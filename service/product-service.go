@@ -68,7 +68,12 @@ func (c *productService) GetProduct() ([]models.Product, error) {
 			fmt.Println(err)
 			return c.Product, err
 		}
-		c.Product = append(c.Product, models.Product{id_produto, id_tipo, valor_metragem, espessura, cor})
+		c.Product = append(c.Product, models.Product{
+			Id_produto:     id_produto,
+			Id_tipo:        id_tipo,
+			Valor_metragem: valor_metragem,
+			Espessura:      espessura,
+			Cor:            cor})
 	}
 
 	rows.Close()
@@ -91,7 +96,12 @@ func (c *productService) GetProductByID(id_produto int) (models.Product, error) 
 		return product, err
 	}
 
-	product = models.Product{id_produto, id_tipo, valor_metragem, espessura, cor}
+	product = models.Product{
+		Id_produto:     id_produto,
+		Id_tipo:        id_tipo,
+		Valor_metragem: valor_metragem,
+		Espessura:      espessura,
+		Cor:            cor}
 
 	return product, nil
 }
