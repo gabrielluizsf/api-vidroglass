@@ -23,12 +23,12 @@ func (c *addressService) CreateAddress(address models.Address) (int, error) {
 
 	db, err := sql.Open("sqlite3", "database.db")
 	defer db.Close()
-	stmt, err := db.Prepare("insert into address (state, city, street, number, zip_number) values (?,?,?,?,?)")
+	stmt, err := db.Prepare("insert into address (id_customer, state, city, street, number, zip_number) values (?,?,?,?,?,?)")
 	if err != nil {
 		return 0, err
 	}
 
-	res, err := stmt.Exec(address.State, address.City, address.Street, address.Number, address.Cep)
+	res, err := stmt.Exec(address.Id_customer, address.State, address.City, address.Street, address.Number, address.Cep)
 
 	if err != nil {
 		return 0, err
@@ -42,7 +42,6 @@ func (c *addressService) CreateAddress(address models.Address) (int, error) {
 	fmt.Println(id)
 
 	return int(id), nil
-
 }
 
 func (c *addressService) GetAddress() ([]models.Address, error) {
@@ -60,7 +59,9 @@ func (c *addressService) GetAddress() ([]models.Address, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&c.Address.Id_address,
+		err = rows.Scan(
+			&c.Address.Id_address,
+			&c.Address.Id_customer,
 			&c.Address.State,
 			&c.Address.City,
 			&c.Address.Street,
@@ -82,7 +83,9 @@ func (c *addressService) GetAddressByID(id_address int) (models.Address, error) 
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	row := db.QueryRow("SELECT * FROM address WHERE id_address = ?", id_address)
 
-	err = row.Scan(&c.Address.Id_address,
+	err = row.Scan(
+		&c.Address.Id_address,
+		&c.Address.Id_customer,
 		&c.Address.State,
 		&c.Address.City,
 		&c.Address.Street,
@@ -98,7 +101,7 @@ func (c *addressService) GetAddressByID(id_address int) (models.Address, error) 
 
 func (c *addressService) UpdateAddress(address models.Address) error {
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
-	stmt, err := db.Prepare("UPDATE address SET state = ?, city = ?, street = ?, number = ?, cep = ? WHERE id_address = ?")
+	stmt, err := db.Prepare("UPDATE address SET state = ?, city = ?, street = ?, number = ?, zip_number = ? WHERE id_address = ?")
 
 	if err != nil {
 		return err

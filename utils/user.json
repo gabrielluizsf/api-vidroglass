@@ -1,0 +1,34 @@
+{
+    "customer": [
+      {
+        "nome": "Amanda",
+        "cpf": "Reader",
+        "telefone": "991299129"
+      },
+      {
+        "name": "Maria",
+        "cpf": "Reader",
+        "phone_number": "991299129"
+      },    
+        {
+        "name": "Pedro",
+        "cpf": "Reader",
+        "phone_number": "991299129"
+      },    
+        {
+        "name": "Guilherme",
+        "cpf": "Reader",
+        "phone_number": "991299129"
+      },    
+        {
+        "name": "aaa",
+        "cpf": "Reader",
+        "phone_number": "991299129"
+      },     
+       {
+        "name": "teste",
+        "cpf": "Reader",
+        "phone_number": "991299129"
+      }
+    ]
+  }

@@ -22,12 +22,12 @@ func NewClienteService() interfaces.ClienteService {
 func (c *clienteService) Save(cliente models.Cliente) (int, error) {
 
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
-	stmt, err := db.Prepare("INSERT INTO cliente(id_endereco, nome, cpf, telefone) values(?,?,?, ?)")
+	stmt, err := db.Prepare("INSERT INTO customer(name, cpf, phone_number) values(?,?,?)")
 	if err != nil {
 		return 0, err
 	}
 
-	res, err := stmt.Exec(cliente.Id_endereco, cliente.Nome, cliente.Cpf, cliente.Telefone)
+	res, err := stmt.Exec(cliente.Nome, cliente.Cpf, cliente.Telefone)
 
 	if err != nil {
 		return 0, err
@@ -49,7 +49,7 @@ func (c *clienteService) Save(cliente models.Cliente) (int, error) {
 func (c *clienteService) FindAll() ([]models.Cliente, error) {
 
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
-	rows, err := db.Query("SELECT * FROM cliente")
+	rows, err := db.Query("SELECT * FROM customer")
 
 	if err != nil {
 		fmt.Println(err)
@@ -60,7 +60,6 @@ func (c *clienteService) FindAll() ([]models.Cliente, error) {
 
 	for rows.Next() {
 		err = rows.Scan(&c.Client.Id_cliente,
-			&c.Client.Id_endereco,
 			&c.Client.Nome,
 			&c.Client.Cpf,
 			&c.Client.Telefone)
@@ -78,10 +77,9 @@ func (c *clienteService) FindAll() ([]models.Cliente, error) {
 
 func (c *clienteService) GetClientById(id_cliente int) (models.Cliente, error) {
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
-	row := db.QueryRow("SELECT * FROM cliente WHERE id_cliente = ?", id_cliente)
+	row := db.QueryRow("SELECT * FROM customer WHERE id_customer = ?", id_cliente)
 
 	err = row.Scan(&c.Client.Id_cliente,
-		&c.Client.Id_endereco,
 		&c.Client.Nome,
 		&c.Client.Cpf,
 		&c.Client.Telefone)
@@ -96,13 +94,13 @@ func (c *clienteService) GetClientById(id_cliente int) (models.Cliente, error) {
 
 func (c *clienteService) UpdateClientById(cliente models.Cliente) error {
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
-	stmt, err := db.Prepare("UPDATE cliente SET id_endereco = ?, nome = ?, cpf = ?, telefone = ? WHERE id_cliente = ?")
+	stmt, err := db.Prepare("UPDATE customer SET name = ?, cpf = ?, phone_number = ? WHERE id_customer = ?")
 
 	if err != nil {
 		return err
 	}
 
-	res, err := stmt.Exec(cliente.Id_endereco, cliente.Nome, cliente.Cpf, cliente.Telefone, cliente.Id_cliente)
+	res, err := stmt.Exec(cliente.Nome, cliente.Cpf, cliente.Telefone, cliente.Id_cliente)
 
 	fmt.Println(res)
 	if err != nil {

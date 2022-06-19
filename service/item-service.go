@@ -27,13 +27,13 @@ func (c *itemService) Save(item models.Item) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	stmt, err := db.Prepare("INSERT INTO item(id_produto, id_nota, quantidade, valor, desconto, metragem_produto) values(?,?,?, ?,?,?)")
+	stmt, err := db.Prepare("INSERT INTO item(id_invoice, id_product, amount, quantity, discount, metreage) values(?,?,?, ?,?,?)")
 	if err != nil {
 		return 0, err
 	}
 
 	total_value *= item.Metragem
-	res, err := stmt.Exec(item.Id_produto, item.Id_nota, item.Quantidade, total_value, item.Desconto, item.Metragem)
+	res, err := stmt.Exec(item.Id_nota, item.Id_produto, total_value, item.Quantidade, item.Desconto, item.Metragem)
 
 	if err != nil {
 		return 0, err
@@ -67,10 +67,10 @@ func (c *itemService) FindAll() ([]models.Item, error) {
 	for rows.Next() {
 		err = rows.Scan(
 			&c.Item.Id_item,
-			&c.Item.Id_produto,
 			&c.Item.Id_nota,
-			&c.Item.Quantidade,
+			&c.Item.Id_produto,
 			&c.Item.Valor,
+			&c.Item.Quantidade,
 			&c.Item.Desconto,
 			&c.Item.Metragem)
 
@@ -92,10 +92,10 @@ func (c *itemService) GetItemById(id_item int) (models.Item, error) {
 
 	err = row.Scan(
 		&c.Item.Id_item,
-		&c.Item.Id_produto,
 		&c.Item.Id_nota,
-		&c.Item.Quantidade,
+		&c.Item.Id_produto,
 		&c.Item.Valor,
+		&c.Item.Quantidade,
 		&c.Item.Desconto,
 		&c.Item.Metragem)
 
@@ -133,7 +133,7 @@ func (c *itemService) getProductValue(id_produto int) (float64, error) {
 
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	defer db.Close()
-	row := db.QueryRow("SELECT valor_metragem FROM produto where id_produto = ?", id_produto)
+	row := db.QueryRow("SELECT value_per_meter FROM product where id_product = ?", id_produto)
 
 	if err != nil {
 		return 0, err
@@ -155,12 +155,12 @@ func (c *itemService) GetInvoiceItens(id_nota int) ([]models.ItemPayload, error)
 
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	rows, err := db.Query("SELECT "+
-		"i.quantidade, i.valor, i.desconto,"+
-		"i.metragem_produto, p.espessura, p.cor, tp.nome "+
+		"i.quantity, i.amount, i.discount,"+
+		"i.metreage, p.thickness, p.color, tp.name "+
 		"FROM item as i "+
-		"join produto as p on p.id_produto = i.id_produto "+
-		"join tipo_produto as tp on tp.id_tipo_produto = p.id_tipo "+
-		"where i.id_nota = ?", id_nota)
+		"join product as p on p.id_product = i.id_product "+
+		"join product_type as tp on tp.id_type = p.id_type "+
+		"where i.id_invoice = ?", id_nota)
 
 	if err != nil {
 		fmt.Println(err)

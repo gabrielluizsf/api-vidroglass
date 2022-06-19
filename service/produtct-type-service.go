@@ -23,7 +23,7 @@ func (c *productTypeService) CreateProductType(product_type models.ProductType) 
 
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	defer db.Close()
-	stmt, err := db.Prepare("insert into tipo_produto (nome, descricao) values (?,?)")
+	stmt, err := db.Prepare("insert into product_type (name, description) values (?,?)")
 	if err != nil {
 		return 0, err
 	}
@@ -49,7 +49,7 @@ func (c *productTypeService) GetProductType() ([]models.ProductType, error) {
 
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	defer db.Close()
-	rows, err := db.Query("SELECT * FROM tipo_produto")
+	rows, err := db.Query("SELECT * FROM product_type")
 
 	if err != nil {
 		fmt.Println(err)
@@ -78,7 +78,7 @@ func (c *productTypeService) GetProductType() ([]models.ProductType, error) {
 func (c *productTypeService) GetProductTypeByID(id_product_type int) (models.ProductType, error) {
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	defer db.Close()
-	row := db.QueryRow("SELECT * FROM tipo_produto WHERE id_tipo_produto = ?", id_product_type)
+	row := db.QueryRow("SELECT * FROM product_type WHERE id_type = ?", id_product_type)
 
 	var product_type models.ProductType
 
@@ -98,7 +98,7 @@ func (c *productTypeService) GetProductTypeByID(id_product_type int) (models.Pro
 func (c *productTypeService) UpdateProductType(product_type models.ProductType) error {
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	defer db.Close()
-	stmt, err := db.Prepare("UPDATE tipo_produto SET nome = ?, descricao = ? WHERE id_tipo_produto = ?")
+	stmt, err := db.Prepare("UPDATE product_type SET name = ?, description = ? WHERE id_type = ?")
 
 	if err != nil {
 		return err
