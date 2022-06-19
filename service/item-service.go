@@ -180,5 +180,6 @@ func (c *itemService) GetInvoiceItens(id_nota int) ([]models.ItemPayload, error)
 
 	rows.Close()
 	db.Close()
+
 	return itemPayloads, nil
 }
