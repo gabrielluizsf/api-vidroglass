@@ -11,7 +11,8 @@ import (
 )
 
 type productTypeService struct {
-	Product_type []models.ProductType
+	ProductType     models.ProductType
+	ProductTypeList []models.ProductType
 }
 
 func NewProductTypeService() interfaces.ProductTypeService {
@@ -52,26 +53,26 @@ func (c *productTypeService) GetProductType() ([]models.ProductType, error) {
 
 	if err != nil {
 		fmt.Println(err)
-		return c.Product_type, err
+		return c.ProductTypeList, err
 	}
 
-	c.Product_type = nil
-
-	var id_product_type int
-	var Nome string
-	var Descricao string
+	c.ProductTypeList = nil
 
 	for rows.Next() {
-		err = rows.Scan(&id_product_type, &Nome, &Descricao)
+		err = rows.Scan(
+			&c.ProductType.Id_tipo,
+			&c.ProductType.Nome,
+			&c.ProductType.Descricao)
+
 		if err != nil {
 			fmt.Println(err)
-			return c.Product_type, err
+			return c.ProductTypeList, err
 		}
-		c.Product_type = append(c.Product_type, models.ProductType{id_product_type, Nome, Descricao})
+		c.ProductTypeList = append(c.ProductTypeList, c.ProductType)
 	}
 
 	rows.Close()
-	return c.Product_type, nil
+	return c.ProductTypeList, nil
 }
 
 func (c *productTypeService) GetProductTypeByID(id_product_type int) (models.ProductType, error) {
@@ -81,18 +82,17 @@ func (c *productTypeService) GetProductTypeByID(id_product_type int) (models.Pro
 
 	var product_type models.ProductType
 
-	var nome string
-	var descricao string
+	err = row.Scan(
+		&c.ProductType.Id_tipo,
+		&c.ProductType.Nome,
+		&c.ProductType.Descricao)
 
-	err = row.Scan(&id_product_type, &nome, &descricao)
 	if err != nil {
 		fmt.Println(err)
 		return product_type, err
 	}
 
-	product_type = models.ProductType{id_product_type, nome, descricao}
-
-	return product_type, nil
+	return c.ProductType, nil
 }
 
 func (c *productTypeService) UpdateProductType(product_type models.ProductType) error {

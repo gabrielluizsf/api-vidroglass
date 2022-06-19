@@ -11,7 +11,8 @@ import (
 )
 
 type notaService struct {
-	Nota []models.Nota
+	Nota     models.Nota
+	NotaList []models.Nota
 }
 
 func NewNotaService() interfaces.NotaService {
@@ -62,7 +63,7 @@ func (c *notaService) CreateNota() (int, error) {
 func (c *notaService) GetNota() ([]models.Nota, error) {
 
 	var nota models.Nota
-	c.Nota = nil
+	c.NotaList = nil
 
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	defer db.Close()
@@ -70,7 +71,7 @@ func (c *notaService) GetNota() ([]models.Nota, error) {
 
 	if err != nil {
 		fmt.Println(err)
-		return c.Nota, err
+		return c.NotaList, err
 	}
 
 	for rows.Next() {
@@ -83,17 +84,14 @@ func (c *notaService) GetNota() ([]models.Nota, error) {
 
 		if err != nil {
 			fmt.Println(err)
-			return c.Nota, err
+			return c.NotaList, err
 		}
-		c.Nota = append(c.Nota, models.Nota{nota.Id_nota, nota.Id_pagamento,
-			nota.Id_cliente, nota.Id_endereco_entrega,
-			nota.Tipo_nota, nota.Data, nota.Valor_total,
-			nota.Desconto_total})
+		c.NotaList = append(c.NotaList, nota)
 	}
 
 	rows.Close()
 
-	return c.Nota, nil
+	return c.NotaList, nil
 
 }
 
@@ -196,9 +194,16 @@ func (c *notaService) buildNotaPayload(nota models.Nota) (models.NotaPayload, er
 		return notaPayload, err
 	}
 
-	notaPayload = models.NotaPayload{nota.Id_nota, nota.Id_pagamento,
-		nota.Tipo_nota, nota.Data, nota.Valor_total,
-		nota.Desconto_total, Item, cliente, endereco}
+	notaPayload = models.NotaPayload{
+		Id_nota:        nota.Id_nota,
+		Id_pagamento:   nota.Id_pagamento,
+		Tipo_nota:      nota.Tipo_nota,
+		Data:           nota.Data,
+		Valor_total:    nota.Valor_total,
+		Desconto_total: nota.Desconto_total,
+		Item:           Item,
+		Cliente:        cliente,
+		Address:        endereco}
 
 	return notaPayload, nil
 }
