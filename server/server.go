@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/mariarobertap/api-vidroglass/controller"
@@ -59,6 +60,12 @@ func main() {
 	//setupLogOutput()
 	server := gin.Default()
 
+	server.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
+		AllowHeaders: []string{"Content-Type,access-control-allow-origin, access-control-allow-headers"},
+	}))
+
 	//server.Use(gin.Recovery(), middleware.Logger(), middleware.Auth())
 
 	server.GET("/health-check", func(ctx *gin.Context) {
@@ -102,6 +109,6 @@ func main() {
 	server.GET("/nota/:id_nota", NotaController.GetNotaByID)
 	server.PUT("/nota", NotaController.UpdateNota)
 
-	server.Run(":8080")
+	server.Run(":3000")
 
 }
