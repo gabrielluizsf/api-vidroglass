@@ -69,7 +69,7 @@ type ProductController interface {
 
 type ProductService interface {
 	GetProductByID(id_product int) (models.Product, error)
-	GetProduct() ([]models.Product, error)
+	GetProduct() ([]models.ProductPayload, error)
 	CreateProduct(models.Product) (int, error)
 	UpdateProduct(models.Product) error
 }

@@ -11,7 +11,8 @@ import (
 )
 
 type productService struct {
-	Product []models.Product
+	Product        []models.Product
+	ProductPayload []models.ProductPayload
 }
 
 func NewProductService() interfaces.ProductService {
@@ -43,21 +44,32 @@ func (c *productService) CreateProduct(product models.Product) (int, error) {
 	return int(id), nil
 }
 
-func (c *productService) GetProduct() ([]models.Product, error) {
+func (c *productService) GetProduct() ([]models.ProductPayload, error) {
 
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	defer db.Close()
-	rows, err := db.Query("SELECT * FROM product")
+	c.ProductPayload = nil
+
+	rows, err := db.Query(`SELECT 
+								p.id_product,
+								t.name,
+								p.value_per_meter,
+								p.total_value,
+								p.thickness,
+								p.color
+							FROM 
+								product p
+							JOIN 
+								product_type t on p.id_type = t.id_type
+								`)
 
 	if err != nil {
 		fmt.Println(err)
-		return c.Product, err
+		return c.ProductPayload, err
 	}
 
-	c.Product = nil
-
 	var id_produto int
-	var id_tipo int
+	var tipo string
 	var valor_total float32
 
 	var valor_metragem float32
@@ -65,14 +77,14 @@ func (c *productService) GetProduct() ([]models.Product, error) {
 	var cor string
 
 	for rows.Next() {
-		err = rows.Scan(&id_produto, &id_tipo, &valor_metragem, &valor_total, &espessura, &cor)
+		err = rows.Scan(&id_produto, &tipo, &valor_metragem, &valor_total, &espessura, &cor)
 		if err != nil {
 			fmt.Println(err)
-			return c.Product, err
+			return c.ProductPayload, err
 		}
-		c.Product = append(c.Product, models.Product{
+		c.ProductPayload = append(c.ProductPayload, models.ProductPayload{
 			Id_produto:     id_produto,
-			Id_tipo:        id_tipo,
+			Tipo:           tipo,
 			Valor_metragem: valor_metragem,
 			Valor_total:    valor_total,
 			Espessura:      espessura,
@@ -80,7 +92,7 @@ func (c *productService) GetProduct() ([]models.Product, error) {
 	}
 
 	rows.Close()
-	return c.Product, nil
+	return c.ProductPayload, nil
 }
 
 func (c *productService) GetProductByID(id_produto int) (models.Product, error) {
