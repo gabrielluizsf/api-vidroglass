@@ -1,2 +1,16 @@
 -- SQLite
-insert into endereco (rua, numero, cep, cidade, estado) values ("Rua ipanema", 1761, "123123", "San Francisco", "CALIFORNIA")
+SELECT 
+    p.id_product,
+    t.name,
+    p.value_per_meter,
+    p.total_value,
+    p.thickness,
+    p.cor
+FROM 
+    product p
+JOIN 
+    product_type t on p.id_type = t.id_type
+
+
+
+select * from product
