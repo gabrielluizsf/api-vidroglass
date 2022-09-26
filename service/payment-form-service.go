@@ -23,7 +23,7 @@ func (c *paymentFormService) CreatePaymentForm(payment models.PaymentForm) (int,
 
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	defer db.Close()
-	stmt, err := db.Prepare("insert into pagamento (forma_pagamento) values (?)")
+	stmt, err := db.Prepare("insert into payment (payment_form) values (?)")
 
 	if err != nil {
 		return 0, err
@@ -51,7 +51,7 @@ func (c *paymentFormService) GetPaymentForm() ([]models.PaymentForm, error) {
 	c.PaymentFormList = nil
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	defer db.Close()
-	rows, err := db.Query("SELECT * FROM pagamento")
+	rows, err := db.Query("SELECT * FROM payment")
 
 	if err != nil {
 		fmt.Println(err)
@@ -79,7 +79,7 @@ func (c *paymentFormService) GetPaymentForm() ([]models.PaymentForm, error) {
 func (c *paymentFormService) GetPaymentFormByID(id_payment int) (models.PaymentForm, error) {
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	defer db.Close()
-	row := db.QueryRow("SELECT * FROM pagamento WHERE id_pagamento = ?", id_payment)
+	row := db.QueryRow("SELECT * FROM payment WHERE id_pagamento = ?", id_payment)
 
 	err = row.Scan(
 		&c.PaymentForm.Id_payment,
@@ -94,7 +94,7 @@ func (c *paymentFormService) GetPaymentFormByID(id_payment int) (models.PaymentF
 func (c *paymentFormService) UpdatePaymentForm(payment models.PaymentForm) error {
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	defer db.Close()
-	stmt, err := db.Prepare("UPDATE pagamento SET forma_pagamento = ? WHERE id_pagamento = ?")
+	stmt, err := db.Prepare("UPDATE payment SET payment_form = ? WHERE id_pagamento = ?")
 
 	if err != nil {
 		return err
