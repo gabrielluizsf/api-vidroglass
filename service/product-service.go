@@ -92,6 +92,7 @@ func (c *productService) GetProduct() ([]models.ProductPayload, error) {
 	}
 
 	rows.Close()
+
 	return c.ProductPayload, nil
 }
 

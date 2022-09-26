@@ -124,7 +124,7 @@ func saveCustomer(customer models.Cliente) (int, error) {
 		return 0, err
 	}
 
-	res, err := stmt.Exec(customer.Nome, customer.Cpf, customer.Telefone)
+	res, err := stmt.Exec(customer.Nome, customer.Telefone)
 
 	if err != nil {
 		log.Fatal(err)
