@@ -118,3 +118,26 @@ func (c *addressService) UpdateAddress(address models.Address) error {
 
 	return nil
 }
+
+func (c *addressService) DeleteAddress(id_address int) error {
+
+	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
+	defer db.Close()
+
+	stmt, err := db.Prepare("DELETE FROM address WHERE id_address = ?")
+
+	if err != nil {
+		return err
+	}
+
+	res, err := stmt.Exec(id_address)
+
+	fmt.Println(res)
+	fmt.Println(err)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

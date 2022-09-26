@@ -38,12 +38,14 @@ type AddressController interface {
 	GetAddress(ctx *gin.Context)
 	CreateAddress(ctx *gin.Context)
 	UpdateAddress(ctx *gin.Context)
+	DeleteAddressByID(ctx *gin.Context)
 }
 type AddressService interface {
 	GetAddressByID(id_address int) (models.Address, error)
 	GetAddress() ([]models.Address, error)
 	CreateAddress(models.Address) (int, error)
 	UpdateAddress(models.Address) error
+	DeleteAddress(id_address int) error
 }
 
 type ProductTypeController interface {

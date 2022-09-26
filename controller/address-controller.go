@@ -23,8 +23,22 @@ func NewAddressController(service interfaces.AddressService) interfaces.AddressC
 func (c *controllerAddress) GetAddress(ctx *gin.Context) {
 	address, err := c.service.GetAddress()
 	if err != nil {
-		fmt.Println(err)
-		ctx.JSON(400, "error")
+		response := models.BadResponse{
+			Message: "Ocorreu um erro inesperado",
+			Status:  "Erro",
+			Erro:    err.Error()}
+		ctx.JSON(400, response)
+	}
+
+	if address == nil {
+		response := models.BadResponse{
+			Message: "Nenhum endereco foi encontrado",
+			Status:  "Warning",
+			Erro:    "Não Encontrado."}
+		ctx.JSON(200, response)
+
+		return
+
 	}
 
 	ctx.JSON(200, address)
@@ -85,6 +99,37 @@ func (c *controllerAddress) UpdateAddress(ctx *gin.Context) {
 	}
 
 	response := models.GoodResponseAddress{"Objeto atualizado", "Ok", address}
+
+	ctx.JSON(200, response)
+
+}
+
+func (c *controllerAddress) DeleteAddressByID(ctx *gin.Context) {
+
+	id_address, err := strconv.Atoi(ctx.Param("id_address"))
+
+	if err != nil {
+		response := models.BadResponse{
+			Message: "Requisicao incorreta. Erro ao realizar o parse",
+			Status:  "Erro",
+			Erro:    err.Error()}
+
+		ctx.JSON(400, response)
+		return
+	}
+
+	err = c.service.DeleteAddress(id_address)
+
+	if err != nil {
+		response := models.BadResponse{
+			Message: "Erro ao deletar o objeto",
+			Status:  "Erro",
+			Erro:    err.Error()}
+
+		ctx.JSON(500, response)
+		return
+	}
+	response := models.GoodResponseAddress{"Objeto Deletado", "Ok", models.Address{Id_address: id_address}}
 
 	ctx.JSON(200, response)
 

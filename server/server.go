@@ -88,6 +88,7 @@ func main() {
 	server.POST("/address", AddressController.CreateAddress)
 	server.GET("/address/:id_address", AddressController.GetAddressByID)
 	server.PUT("/address", AddressController.UpdateAddress)
+	server.DELETE("/address/:id_address", AddressController.DeleteAddressByID)
 
 	server.GET("/product/type", ProductTypeController.GetProductType)
 	server.POST("/product/type", ProductTypeController.CreateProductType)
