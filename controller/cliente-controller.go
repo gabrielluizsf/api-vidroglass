@@ -35,7 +35,7 @@ func (c *controllerCliente) Save(ctx *gin.Context) {
 	var cliente models.Cliente
 
 	if err := ctx.BindJSON(&cliente); err != nil {
-		ctx.JSON(http.StatusBadRequest, models.BadResponse{"Ocorreu um erro ao criar o Objeto", "Error", err.Error()})
+		ctx.JSON(http.StatusBadRequest, models.BadResponse{"A requisição está incorreta!", "Erro na requisição", err.Error()})
 		return
 	}
 	id, err := c.service.Save(cliente)
@@ -43,7 +43,7 @@ func (c *controllerCliente) Save(ctx *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 		response := models.BadResponse{"Ocorreu um erro ao criar o Objeto", "Error", err.Error()}
-		ctx.JSON(400, response)
+		ctx.JSON(500, response)
 		return
 	}
 	cliente.Id_cliente = id

@@ -3,7 +3,6 @@ package models
 type Cliente struct {
 	Id_cliente int    `json:"idcliente"`
 	Nome       string `json:"nome,omitempty" binding:"required"`
-	Cpf        string `json:"cpf,omitempty" binding:"required"`
 	Telefone   string `json:"telefone,omitempty" binding:"required"`
 }
 
