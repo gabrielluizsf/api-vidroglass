@@ -24,6 +24,7 @@ type PaymentFormController interface {
 	GetPaymentForm(ctx *gin.Context)
 	CreatePaymentForm(ctx *gin.Context)
 	UpdatePaymentForm(ctx *gin.Context)
+	DeletePaymentByID(ctx *gin.Context)
 }
 
 type PaymentFormService interface {
@@ -31,6 +32,7 @@ type PaymentFormService interface {
 	GetPaymentForm() ([]models.PaymentForm, error)
 	CreatePaymentForm(models.PaymentForm) (int, error)
 	UpdatePaymentForm(models.PaymentForm) error
+	DeletePaymentByID(id_payment int) error
 }
 
 type AddressController interface {

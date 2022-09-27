@@ -89,3 +89,33 @@ func (c *controllerPaymentForm) UpdatePaymentForm(ctx *gin.Context) {
 	ctx.JSON(200, response)
 
 }
+
+func (c *controllerPaymentForm) DeletePaymentByID(ctx *gin.Context) {
+	id_payment := ctx.Param("idpagamento")
+	id_paymentstr, err := strconv.Atoi(id_payment)
+	if err != nil {
+		fmt.Println(err)
+		response := models.BadResponse{"Cliente não encontrado", "Error", err.Error()}
+		ctx.JSON(400, response)
+		return
+	}
+
+	err = c.service.DeletePaymentByID(id_paymentstr)
+
+	if err != nil {
+		response := models.BadResponse{
+			Message: "Erro ao deletar o objeto",
+			Status:  "Erro",
+			Erro:    err.Error()}
+
+		ctx.JSON(500, response)
+		return
+	}
+	response := models.GoodResponsePayment{
+		Message:     "Objeto Deletado",
+		Status:      "Ok",
+		PaymentForm: models.PaymentForm{}}
+
+	ctx.JSON(200, response)
+
+}
