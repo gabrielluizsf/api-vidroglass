@@ -109,3 +109,23 @@ func (c *paymentFormService) UpdatePaymentForm(payment models.PaymentForm) error
 
 	return nil
 }
+
+func (c *paymentFormService) DeletePaymentByID(id_payment int) error {
+	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
+	defer db.Close()
+
+	stmt, err := db.Prepare("DELETE FROM payment WHERE id_payment = ?")
+	if err != nil {
+		return err
+	}
+
+	res, err := stmt.Exec(id_payment)
+
+	fmt.Println(res)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}

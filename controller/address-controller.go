@@ -129,7 +129,10 @@ func (c *controllerAddress) DeleteAddressByID(ctx *gin.Context) {
 		ctx.JSON(500, response)
 		return
 	}
-	response := models.GoodResponseAddress{"Objeto Deletado", "Ok", models.Address{Id_address: id_address}}
+	response := models.GoodResponseAddress{
+		Message: "Objeto Deletado",
+		Status:  "Ok",
+		Address: models.Address{Id_address: id_address}}
 
 	ctx.JSON(200, response)
 

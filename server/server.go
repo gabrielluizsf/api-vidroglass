@@ -83,6 +83,7 @@ func main() {
 	server.POST("/paymentform", PaymentController.CreatePaymentForm)
 	server.GET("/paymentform/:id_payment", PaymentController.GetPaymentFormByID)
 	server.PUT("/paymentform", PaymentController.UpdatePaymentForm)
+	server.DELETE("/paymentform/:idpagamento", PaymentController.DeletePaymentByID)
 
 	server.GET("/address", AddressController.GetAddress)
 	server.POST("/address", AddressController.CreateAddress)
