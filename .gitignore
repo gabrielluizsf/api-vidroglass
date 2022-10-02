@@ -3,3 +3,4 @@ vendor/
 .env
 .vscode
 utils/data/
+server/database.db
