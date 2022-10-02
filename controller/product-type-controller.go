@@ -89,3 +89,21 @@ func (c *controllerProductType) UpdateProductType(ctx *gin.Context) {
 	ctx.JSON(200, response)
 
 }
+
+func (c *controllerProductType) DeleteProductTypeByID(ctx *gin.Context) {
+	id_tipo := ctx.Param("id_tipo")
+	teste, err := strconv.Atoi(id_tipo)
+	err = c.service.DeleteProductTypeByID(teste)
+	if err != nil {
+		fmt.Println(err)
+		ctx.JSON(400, "error")
+	}
+
+	response := models.GoodResponseProductType{
+		Message:     "Objeto excluido",
+		Status:      "Ok",
+		ProductType: models.ProductType{}}
+
+	ctx.JSON(200, response)
+
+}

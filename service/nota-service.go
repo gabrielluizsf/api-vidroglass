@@ -12,20 +12,20 @@ import (
 
 type notaService struct {
 	Nota     models.Nota
-	NotaList []models.Nota
+	NotaList []models.NotaPayload
 }
 
 func NewNotaService() interfaces.NotaService {
 	return &notaService{}
 }
 
-func (c *notaService) CreateNota() (int, error) {
+func (c *notaService) CreateNota(nota models.Nota) (int, error) {
 
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	defer db.Close()
 	stmt, err := db.Prepare("insert into invoice" +
-		"(id_payment)" +
-		"values (0)")
+		"(id_payment, id_customer, id_delivery_address, invoice_type, date)" +
+		"values (?,?,?,?,?)")
 
 	if err != nil {
 		return 0, err
@@ -43,7 +43,7 @@ func (c *notaService) CreateNota() (int, error) {
 			return 0, err
 		}
 	*/
-	res, err := stmt.Exec()
+	res, err := stmt.Exec(nota.Id_pagamento, nota.Id_cliente, nota.Id_endereco_entrega, nota.Tipo_nota, nota.Data)
 
 	if err != nil {
 		return 0, err
@@ -60,7 +60,7 @@ func (c *notaService) CreateNota() (int, error) {
 
 }
 
-func (c *notaService) GetNota() ([]models.Nota, error) {
+func (c *notaService) GetNota() ([]models.NotaPayload, error) {
 
 	var nota models.Nota
 	c.NotaList = nil
@@ -91,7 +91,15 @@ func (c *notaService) GetNota() ([]models.Nota, error) {
 			fmt.Println(err)
 			return c.NotaList, err
 		}
-		c.NotaList = append(c.NotaList, nota)
+
+		notaPayload, err := c.buildNotaPayload(nota)
+
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		c.NotaList = append(c.NotaList, notaPayload)
 	}
 
 	rows.Close()
@@ -104,6 +112,7 @@ func (c *notaService) GetNotaByID(id_nota int) (models.NotaPayload, error) {
 
 	var nota models.Nota
 	var notaPayload models.NotaPayload
+	fmt.Println(id_nota)
 
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	defer db.Close()
@@ -197,14 +206,19 @@ func (c *notaService) buildNotaPayload(nota models.Nota) (models.NotaPayload, er
 
 	cliente, err := clienteService.GetClientById(nota.Id_cliente)
 	if err != nil {
+		fmt.Println("Cliente não econtrado")
 		return notaPayload, err
 	}
 	Item, err := ItemService.GetInvoiceItens(nota.Id_nota)
 	if err != nil {
+		fmt.Println("Itens não encontrados")
+
 		return notaPayload, err
 	}
 	endereco, err := AddressService.GetAddressByID(nota.Id_endereco_entrega)
 	if err != nil {
+		fmt.Println("Endereço não encontrado")
+
 		return notaPayload, err
 	}
 

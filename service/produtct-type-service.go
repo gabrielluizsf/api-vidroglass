@@ -113,3 +113,24 @@ func (c *productTypeService) UpdateProductType(product_type models.ProductType) 
 
 	return nil
 }
+
+func (c *productTypeService) DeleteProductTypeByID(id_tipo int) error {
+
+	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
+	defer db.Close()
+
+	query, err := db.Prepare("DELETE FROM product_type WHERE id_type = ?")
+
+	if err != nil {
+		return err
+	}
+
+	_, err = query.Exec(id_tipo)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}

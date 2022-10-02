@@ -57,6 +57,7 @@ type ProductTypeController interface {
 	GetProductType(ctx *gin.Context)
 	CreateProductType(ctx *gin.Context)
 	UpdateProductType(ctx *gin.Context)
+	DeleteProductTypeByID(ctx *gin.Context)
 }
 
 type ProductTypeService interface {
@@ -64,6 +65,7 @@ type ProductTypeService interface {
 	GetProductType() ([]models.ProductType, error)
 	CreateProductType(models.ProductType) (int, error)
 	UpdateProductType(models.ProductType) error
+	DeleteProductTypeByID(id_tipo int) error
 }
 
 type ProductController interface {
@@ -106,7 +108,7 @@ type NotaController interface {
 
 type NotaService interface {
 	GetNotaByID(id_nota int) (models.NotaPayload, error)
-	GetNota() ([]models.Nota, error)
-	CreateNota() (int, error)
+	GetNota() ([]models.NotaPayload, error)
+	CreateNota(models.Nota) (int, error)
 	UpdateNota(models.Nota) (models.Nota, error)
 }
