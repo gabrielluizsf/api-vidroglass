@@ -32,8 +32,14 @@ func (c *controllerNota) GetNota(ctx *gin.Context) {
 }
 
 func (c *controllerNota) CreateNota(ctx *gin.Context) {
+	var nota models.Nota
 
-	id, err := c.service.CreateNota()
+	if err := ctx.BindJSON(&nota); err != nil {
+		ctx.JSON(http.StatusBadRequest, models.BadResponse{"Ocorreu um erro ao criar o Objeto", "Error", err.Error()})
+		return
+	}
+
+	id, err := c.service.CreateNota(nota)
 
 	if err != nil {
 		fmt.Println(err)
@@ -54,7 +60,7 @@ func (c *controllerNota) GetNotaByID(ctx *gin.Context) {
 	customer, err := c.service.GetNotaByID(id_notastr)
 	if err != nil {
 		fmt.Println(err)
-		response := models.BadResponse{"Cliente não encontrado", "Error", err.Error()}
+		response := models.BadResponse{"Nota não encontrado", "Error", err.Error()}
 		ctx.JSON(400, response)
 		return
 	}
