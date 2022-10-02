@@ -89,3 +89,19 @@ func (c *controllerProduct) UpdateProduct(ctx *gin.Context) {
 	ctx.JSON(200, response)
 
 }
+
+func (c *controllerProduct) DeleteProductById(ctx *gin.Context) {
+	id_produto := ctx.Param("id_product")
+	id_produtostr, err := strconv.Atoi(id_produto)
+	err = c.service.DeleteProductById(id_produtostr)
+	if err != nil {
+		fmt.Println(err)
+		response := models.BadResponse{"Produto não encontrado", "Error", err.Error()}
+		ctx.JSON(400, response)
+		return
+	}
+	response := models.GoodResponseProduct{"Objeto excluido", "Ok", models.Product{}}
+
+	ctx.JSON(200, response)
+
+}
