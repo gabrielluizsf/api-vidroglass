@@ -101,6 +101,7 @@ func main() {
 	server.POST("/product", ProductController.CreateProduct)
 	server.GET("/product/:id_tipo", ProductController.GetProductByID)
 	server.PUT("/product", ProductController.UpdateProduct)
+	server.DELETE("/product/:id_product", ProductController.DeleteProductById)
 
 	server.GET("/item", ItemController.FindAll)
 	server.POST("/item", ItemController.Save)

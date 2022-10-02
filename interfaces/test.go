@@ -71,6 +71,7 @@ type ProductController interface {
 	GetProduct(ctx *gin.Context)
 	CreateProduct(ctx *gin.Context)
 	UpdateProduct(ctx *gin.Context)
+	DeleteProductById(ctx *gin.Context)
 }
 
 type ProductService interface {
@@ -78,6 +79,7 @@ type ProductService interface {
 	GetProduct() ([]models.ProductPayload, error)
 	CreateProduct(models.Product) (int, error)
 	UpdateProduct(models.Product) error
+	DeleteProductById(id_product int) error
 }
 
 type ItemController interface {

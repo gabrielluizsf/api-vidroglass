@@ -144,3 +144,23 @@ func (c *productService) UpdateProduct(product models.Product) error {
 
 	return nil
 }
+
+func (p *productService) DeleteProductById(id_product int) error {
+	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
+	defer db.Close()
+
+	query, err := db.Prepare("DELETE FROM product WHERE id_product = ?")
+
+	if err != nil {
+		return err
+	}
+
+	res, err := query.Exec(id_product)
+
+	fmt.Println(res)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

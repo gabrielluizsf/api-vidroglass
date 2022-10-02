@@ -111,7 +111,5 @@ func (c *productTypeService) UpdateProductType(product_type models.ProductType) 
 		return err
 	}
 
-	db.Close()
-
 	return nil
 }
