@@ -59,7 +59,10 @@ func (c *controllerCliente) GetClientById(ctx *gin.Context) {
 	customer, err := c.service.GetClientById(teste)
 	if err != nil {
 		fmt.Println(err)
-		response := models.BadResponse{"Cliente não encontrado", "Error", err.Error()}
+		response := models.BadResponse{
+			Message: "Cliente não encontrado",
+			Status:  "Error",
+			Erro:    err.Error()}
 		ctx.JSON(400, response)
 		return
 	}
@@ -85,6 +88,30 @@ func (c *controllerCliente) UpdateClientById(ctx *gin.Context) {
 	}
 
 	response := models.GoodResponse{"Objeto atualizado", "Ok", cliente}
+
+	ctx.JSON(200, response)
+}
+
+func (c *controllerCliente) DeleteClientById(ctx *gin.Context) {
+
+	id_cliente := ctx.Param("id_cliente")
+	id_cliente_int, err := strconv.Atoi(id_cliente)
+	c.service.DeleteClientById(id_cliente_int)
+
+	if err != nil {
+		fmt.Println(err)
+		response := models.BadResponse{
+			Message: "Cliente não encontrado",
+			Status:  "Error",
+			Erro:    err.Error()}
+		ctx.JSON(400, response)
+		return
+	}
+
+	response := models.GoodResponse{
+		Message: "Objeto deletado",
+		Status:  "Ok",
+		Cliente: models.Cliente{}}
 
 	ctx.JSON(200, response)
 
