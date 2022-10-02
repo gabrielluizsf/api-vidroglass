@@ -10,6 +10,7 @@ type ClienteController interface {
 	Save(ctx *gin.Context)
 	UpdateClientById(ctx *gin.Context)
 	GetClientById(ctx *gin.Context)
+	DeleteClientById(ctx *gin.Context)
 }
 
 type ClienteService interface {
@@ -17,6 +18,7 @@ type ClienteService interface {
 	FindAll() ([]models.Cliente, error)
 	Save(models.Cliente) (int, error)
 	UpdateClientById(models.Cliente) error
+	DeleteClientById(id_cliente int) error
 }
 
 type PaymentFormController interface {

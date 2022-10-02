@@ -78,6 +78,7 @@ func main() {
 	server.POST("/cliente", clienteController.Save)
 	server.GET("/cliente/:id_cliente", clienteController.GetClientById)
 	server.PUT("/cliente", clienteController.UpdateClientById)
+	server.DELETE("/cliente/:id_cliente", clienteController.DeleteClientById)
 
 	server.GET("/paymentform", PaymentController.GetPaymentForm)
 	server.POST("/paymentform", PaymentController.CreatePaymentForm)

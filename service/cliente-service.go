@@ -90,6 +90,8 @@ func (c *clienteService) GetClientById(id_cliente int) (models.Cliente, error) {
 
 func (c *clienteService) UpdateClientById(cliente models.Cliente) error {
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
+	defer db.Close()
+
 	stmt, err := db.Prepare("UPDATE customer SET name = ?, phone_number = ? WHERE id_customer = ?")
 
 	if err != nil {
@@ -103,7 +105,26 @@ func (c *clienteService) UpdateClientById(cliente models.Cliente) error {
 		return err
 	}
 
-	db.Close()
+	return nil
+}
+
+func (c *clienteService) DeleteClientById(id_client int) error {
+	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
+	defer db.Close()
+
+	stmt, err := db.Prepare("DELETE FROM customer WHERE id_customer = ?")
+
+	if err != nil {
+		return err
+	}
+
+	res, err := stmt.Exec(id_client)
+
+	fmt.Println(res)
+
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
