@@ -199,7 +199,6 @@ func (c *notaService) getTotalValueInvoice(id_nota int) (float64, error) {
 }
 
 func (c *notaService) buildNotaPayload(nota models.Nota) (models.NotaPayload, error) {
-	var notaPayload models.NotaPayload
 	var clienteService interfaces.ClienteService = NewClienteService()
 	var ItemService interfaces.ItemService = NewItemService()
 	var AddressService interfaces.AddressService = NewAddressService()
@@ -207,31 +206,44 @@ func (c *notaService) buildNotaPayload(nota models.Nota) (models.NotaPayload, er
 	cliente, err := clienteService.GetClientById(nota.Id_cliente)
 	if err != nil {
 		fmt.Println("Cliente não econtrado")
-		return notaPayload, err
+		return models.NotaPayload{}, err
 	}
 	Item, err := ItemService.GetInvoiceItens(nota.Id_nota)
 	if err != nil {
 		fmt.Println("Itens não encontrados")
 
-		return notaPayload, err
+		return models.NotaPayload{}, err
 	}
 	endereco, err := AddressService.GetAddressByID(nota.Id_endereco_entrega)
 	if err != nil {
 		fmt.Println("Endereço não encontrado")
 
-		return notaPayload, err
+		return models.NotaPayload{}, err
+	}
+	cliente.Endereco = endereco
+
+	notaPayload := models.NotaPayload{
+		Nota: models.NotaDetails{
+			Id_nota:        nota.Id_nota,
+			Id_pagamento:   nota.Id_pagamento,
+			Tipo_nota:      nota.Tipo_nota,
+			Data:           nota.Data,
+			Valor_total:    c.getInvoiceTotalValue(Item),
+			Desconto_total: nota.Desconto_total,
+			Item:           Item,
+			Cliente:        cliente,
+		},
 	}
 
-	notaPayload = models.NotaPayload{
-		Id_nota:        nota.Id_nota,
-		Id_pagamento:   nota.Id_pagamento,
-		Tipo_nota:      nota.Tipo_nota,
-		Data:           nota.Data,
-		Valor_total:    nota.Valor_total,
-		Desconto_total: nota.Desconto_total,
-		Item:           Item,
-		Cliente:        cliente,
-		Address:        endereco}
-
+	fmt.Printf("Passando aqui")
 	return notaPayload, nil
+}
+
+func (c *notaService) getInvoiceTotalValue(items []models.ItemPayload) float64 {
+	var total float64
+	for i := 0; i < len(items); i++ {
+		total += items[i].Valor
+	}
+
+	return total
 }
