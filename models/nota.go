@@ -11,7 +11,7 @@ type Nota struct {
 	Desconto_total      float64 `json:"desconto_total" `
 }
 
-type NotaPayload struct {
+type NotaDetails struct {
 	Id_nota        int           `json:"id_nota"`
 	Id_pagamento   int           `json:"Id_pagamento"`
 	Tipo_nota      string        `json:"tipo_nota" `
@@ -20,7 +20,10 @@ type NotaPayload struct {
 	Desconto_total float64       `json:"desconto_total" `
 	Item           []ItemPayload `json:"itens" `
 	Cliente        Cliente       `json:"cliente"`
-	Address        Address       `json:"endereco"`
+}
+
+type NotaPayload struct {
+	Nota NotaDetails `json:"nota"`
 }
 
 type GoodResponseNota struct {

@@ -55,7 +55,22 @@ func (c *itemService) Save(item models.Item) (int, error) {
 func (c *itemService) FindAll() ([]models.Item, error) {
 
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
-	rows, err := db.Query("SELECT * FROM item")
+	query := fmt.Sprintf("SELECT " +
+		"i.id_item, " +
+		"i.id_invoice, " +
+		"p.color, " +
+		"tp.name, " +
+		"i.discount, " +
+		"i.metreage, " +
+		"i.quantity, " +
+		"i.amount " +
+		"FROM " +
+		"item i " +
+		"JOIN " +
+		"product as p on i.id_product = p.id_product " +
+		"JOIN " +
+		"product_type as tp on p.id_type = tp.id_type ")
+	rows, err := db.Query(query)
 
 	if err != nil {
 		fmt.Println(err)
@@ -68,11 +83,12 @@ func (c *itemService) FindAll() ([]models.Item, error) {
 		err = rows.Scan(
 			&c.Item.Id_item,
 			&c.Item.Id_nota,
-			&c.Item.Id_produto,
-			&c.Item.Valor,
-			&c.Item.Quantidade,
+			&c.Item.Cor,
+			&c.Item.Nome,
 			&c.Item.Desconto,
-			&c.Item.Metragem)
+			&c.Item.Metragem,
+			&c.Item.Quantidade,
+			&c.Item.Valor)
 
 		if err != nil {
 			fmt.Println(err)
@@ -88,16 +104,35 @@ func (c *itemService) FindAll() ([]models.Item, error) {
 
 func (c *itemService) GetItemById(id_item int) (models.Item, error) {
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
-	row := db.QueryRow("SELECT * FROM item WHERE id_item = ?", id_item)
+
+	query := fmt.Sprintf("SELECT " +
+		"i.id_item, " +
+		"i.id_invoice, " +
+		"p.color, " +
+		"tp.name, " +
+		"i.discount, " +
+		"i.metreage, " +
+		"i.quantity, " +
+		"i.amount " +
+		"FROM " +
+		"item i " +
+		"JOIN " +
+		"product as p on i.id_product = p.id_product " +
+		"JOIN " +
+		"product_type as tp on p.id_type = tp.id_type " +
+		"WHERE " +
+		"i.id_item = ?")
+	row := db.QueryRow(query, id_item)
 
 	err = row.Scan(
 		&c.Item.Id_item,
 		&c.Item.Id_nota,
-		&c.Item.Id_produto,
-		&c.Item.Valor,
-		&c.Item.Quantidade,
+		&c.Item.Cor,
+		&c.Item.Nome,
 		&c.Item.Desconto,
-		&c.Item.Metragem)
+		&c.Item.Metragem,
+		&c.Item.Quantidade,
+		&c.Item.Valor)
 
 	if err != nil {
 		fmt.Println(err)
@@ -152,6 +187,7 @@ func (c *itemService) GetInvoiceItens(id_nota int) ([]models.ItemPayload, error)
 
 	var itemPayload models.ItemPayload
 	var itemPayloads []models.ItemPayload
+	fmt.Print(id_nota)
 
 	db, err := sql.Open("sqlite3", os.Getenv("DBPATH"))
 	rows, err := db.Query("SELECT "+
