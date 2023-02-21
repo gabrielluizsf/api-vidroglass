@@ -8,13 +8,14 @@ import (
 	"log"
 	"os"
 
+	"vidroglass/models"
+
 	"github.com/joho/godotenv"
-	"github.com/mariarobertap/api-vidroglass/models"
 	_ "github.com/mattn/go-sqlite3"
 )
 
 type Invoice struct {
-	InvoiceList []models.Nota `json:"invoice"`
+	InvoiceList []models.Invoice `json:"invoice"`
 }
 type Item struct {
 	ItemList []models.Item `json:"item"`

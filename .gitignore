@@ -4,3 +4,4 @@ vendor/
 .vscode
 utils/data/
 server/database.db
+cmd/database.db
